@@ -142,7 +142,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Alan Henry - [LinkedIn](https://www.linkedin.com/in/alandavidhenry)
 
-Project Link: [github.com/alandavidhenry/tut-ch2-docs-classifier](https://github.com/alandavidhenry/tut-ch2-docs-classifier)
+Project Link: [github.com/alandavidhenry/building-intelligent-apps-tutorials/tree/main/tut-ch8-text-summariser](https://github.com/alandavidhenry/building-intelligent-apps-tutorials/tree/main/tut-ch8-text-summariser)
 
 <!-- ACKNOWLEDGMENTS -->
 
