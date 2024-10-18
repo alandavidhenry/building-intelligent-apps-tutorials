@@ -89,6 +89,7 @@ To get a local copy up and running follow these simple steps.
 
 - Visual Studio or VSCode with the [Azure Extensions for VSCode](https://code.visualstudio.com/docs/azure/extensions)
 - [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
+- [Azure Functions Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=windows%2Cisolated-process%2Cnode-v4%2Cpython-v2%2Chttp-trigger%2Ccontainer-apps&pivots=programming-language-csharp)
 - An Azure account and subscription
 
 ### Installation
@@ -101,14 +102,28 @@ git clone https://github.com/alandavidhenry/building-intelligent-apps-tutorials.
 
 ### Deployment using Bicep
 
-Navigate to the 'infrastructure\Bicep' directory `cd infrastructure\Bicep`
-
 There a several ways to deploy the Bicep IaC:
 
 - Using the Bicep extension with VSCode. [Follow this guide](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-vscode).
 - Using the Azure CLI. [Follow this guide](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-vscode).
 - Using the PowerShell. [Follow this guide](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-powershell).
-- 
+  
+#### Deploying the Bicep IaC using the Azure CLI
+
+1. Navigate to the 'tut-ch3-translator\infrastructure\Bicep' directory: `cd tut-ch3-translator\infrastructure\Bicep`
+   
+2. To test the deployment, set `<location>` to the required deployment location and use the `--what-if` parameter:
+
+```powershell
+az deployment sub create -l <location> -f main.bicep -p main.bicepparam --what-if 
+```
+
+3. To deploy to Azure, set `<location>` to the required deployment location and omit the `--what-if` parameter:
+
+```powershell
+az deployment sub create -l <location> -f main.bicep -p main.bicepparam
+```
+
 ### Deployment using Terraform
 
 Navigate to the 'infrastructure\Terraform' directory `cd infrastructure\Terraform`
@@ -120,6 +135,20 @@ In progress...
 Navigate to the 'infrastructure\Pulumi' directory `cd infrastructure\Pulumi`
 
 In progress...
+
+### Deploying the function code to the function app
+
+1. Navigate to the 'tut-ch3-translator\src\Chapter3LanguageTranslator\Chapter3LanguageTranslator' directory: `cd tut-ch3-translator\src\Chapter3LanguageTranslator`
+
+2. Build the project:
+   ```powershell
+   clear
+    ```
+
+3. Deploy the function
+   ```powershell
+   func azure functionapp publish <function_app_name>
+    ```
 
 <!-- USAGE EXAMPLES -->
 

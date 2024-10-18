@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sites_tut_ch3_translator_func_name": {
+            "value": null
+        },
+        "storageAccounts_tutch3translatorst_name": {
+            "value": null
+        },
+        "components_tut_ch3_translator_func_name": {
+            "value": null
+        },
+        "serverfarms_ASP_tutch3translatorrg_a857_name": {
+            "value": null
+        },
+        "accounts_tut_ch3_translator_trsl_name": {
+            "value": null
+        },
+        "workspaces_DefaultWorkspace_2eb5b1d0_d315_4b57_815c_3df15002ac69_SUK_externalid": {
+            "value": null
+        }
+    }
+}
