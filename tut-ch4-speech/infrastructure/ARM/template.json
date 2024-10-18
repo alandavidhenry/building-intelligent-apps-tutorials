@@ -1,0 +1,37 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "accounts_tut_ch4_speech_spch_name": {
+            "defaultValue": "tut-ch4-speech-spch",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2024-06-01-preview",
+            "name": "[parameters('accounts_tut_ch4_speech_spch_name')]",
+            "location": "uksouth",
+            "tags": {
+                "tutorial": "chapter4"
+            },
+            "sku": {
+                "name": "F0"
+            },
+            "kind": "SpeechServices",
+            "identity": {
+                "type": "None"
+            },
+            "properties": {
+                "networkAcls": {
+                    "defaultAction": "Allow",
+                    "virtualNetworkRules": [],
+                    "ipRules": []
+                },
+                "publicNetworkAccess": "Enabled"
+            }
+        }
+    ]
+}
