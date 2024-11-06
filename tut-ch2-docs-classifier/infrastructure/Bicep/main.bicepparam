@@ -9,3 +9,4 @@ param tags = {
   deployedViaIaC: 'yes'
   version: '1'
 }
+param parameterFile = 'parameters.bicep'

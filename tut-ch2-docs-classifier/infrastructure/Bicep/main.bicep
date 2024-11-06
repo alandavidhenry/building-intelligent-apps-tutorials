@@ -1,12 +1,10 @@
 // Create a subscription-level deployment
 targetScope = 'subscription'
 
-// Import parameters
 @description('Path to the parameters file')
 #disable-next-line no-unused-params
-param parameterFile string = 'parameters.bicep'
+param parameterFile string
 
-// Reference parameters
 @description('Project name used for resource naming')
 param projectName string
 
@@ -46,5 +44,3 @@ module resources 'resources.bicep' = {
     names: names
   }
 }
-
-// var textAnalyticsEndpoint = 'https://${cognitiveServicesAccountName}.cognitiveservices.azure.com/'
