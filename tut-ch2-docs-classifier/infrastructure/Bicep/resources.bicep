@@ -1,60 +1,54 @@
-// Reference parameters
 param location string
 param tags object
-param cognitiveServicesAccountName string
-param appInsightsName string
-param storageAccountName string
-param appServicePlanName string
-param functionAppName string
-param textAnalyticsEndpoint string
-param textAnalyticsKey string
+param names object
 
-module cognitiveServices 'modules/cognitiveServices.bicep' = {
-  name: 'cognitiveServicesDeployment'
+
+module textAnalytics 'modules/textAnalytics.bicep' = {
+  name: 'textAnalyticsDeployment'
   params: {
-    cognitiveServicesAccountName: cognitiveServicesAccountName
+    name: names.textAnalytics
     location: location
     tags: tags
   }
 }
 
-module appInsights 'modules/appInsights.bicep' = {
-  name: 'appInsightsDeployment'
+module monitoring 'modules/monitoring.bicep' = {
+  name: 'monitoringDeployment'
   params: {
-    appInsightsName: appInsightsName
+    names: {
+      logAnalytics: names.logAnalytics
+      appInsights: names.appInsights
+    }
     location: location
     tags: tags
   }
 }
 
-module storageAccount 'modules/storageAccount.bicep' = {
-  name: 'storageAccountDeployment'
+module storage 'modules/storage.bicep' = {
+  name: 'storageDeployment'
   params: {
-    storageAccountName: storageAccountName
+    name: names.storageAccount
     location: location
     tags: tags
   }
 }
 
-module appServicePlan 'modules/appServicePlan.bicep' = {
-  name: 'appServicePlanDeployment'
+module functionInfra 'modules/functionApp.bicep' = {
+  name: 'functionInfraDeployment'
   params: {
-    appServicePlanName: appServicePlanName
+    names: {
+      appServicePlan: names.appServicePlan
+      functionApp: names.functionApp
+    }
     location: location
     tags: tags
+    storageAccountName: names.storageAccount
+    appInsightsConnectionString: monitoring.outputs.appInsightsConnectionString
+    textAnalyticsName: textAnalytics.outputs.name
   }
-}
-
-module functionApp 'modules/functionApp.bicep' = {
-  name: 'functionAppDeployment'
-  params: {
-    functionAppName: functionAppName
-    location: location
-    tags: tags
-    appServicePlanId: appServicePlan.outputs.id
-    storageAccountName: storageAccount.outputs.name
-    appInsightsConnectionString: appInsights.outputs.connectionString
-    textAnalyticsEndpoint: textAnalyticsEndpoint
-    textAnalyticsKey: textAnalyticsKey
-  }
+  dependsOn: [
+    storage
+    monitoring
+    textAnalytics
+  ]
 }

@@ -7,44 +7,44 @@ targetScope = 'subscription'
 param parameterFile string = 'parameters.bicep'
 
 // Reference parameters
-param resourceGroupName string
-param location string
-param tags object
-param cognitiveServicesAccountName string
-param appInsightsName string
-param textAnalyticsKey string
+@description('Project name used for resource naming')
+param projectName string
 
+@description('Prefix for storage account name')
 param storageAccountPrefix string
-param appServicePlanPrefix string
-param functionAppPrefix string
-param deploymentId string = utcNow()
 
-var uniqueSuffix = uniqueString(subscription().id, deploymentId)
-var storageAccountName = '${storageAccountPrefix}${uniqueSuffix}'
-var appServicePlanName = '${appServicePlanPrefix}${uniqueSuffix}'
-var functionAppName = '${functionAppPrefix}-${uniqueSuffix}'
-var textAnalyticsEndpoint = 'https://${cognitiveServicesAccountName}.cognitiveservices.azure.com/'
+@description('Azure region for resource deployment')
+param location string
 
-// Create resource group
+@description('Tags to be applied to all resources')
+param tags object
+
+var uniqueSuffix = uniqueString(subscription().id, deployment().name)
+
+var names = {
+  resourceGroup: 'rg-${projectName}'
+  textAnalytics: 'lang-${projectName}-${uniqueSuffix}'
+  logAnalytics: 'log-${projectName}-${uniqueSuffix}'
+  appInsights: 'appi-${projectName}-${uniqueSuffix}'
+  storageAccount: 'st${storageAccountPrefix}${uniqueSuffix}'
+  appServicePlan: 'asp-${projectName}-${uniqueSuffix}'
+  functionApp: 'func-${projectName}-${uniqueSuffix}'
+}
+
 resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
-  name: resourceGroupName
+  name: names.resourceGroup
   location: location
   tags: tags
 }
 
-// Import resources and pass through parameters
 module resources 'resources.bicep' = {
   name: 'resourcesDeployment'
   scope: rg
   params: {
     location: location
     tags: tags
-    cognitiveServicesAccountName: cognitiveServicesAccountName
-    appInsightsName: appInsightsName
-    storageAccountName: storageAccountName
-    appServicePlanName: appServicePlanName
-    functionAppName: functionAppName
-    textAnalyticsEndpoint: textAnalyticsEndpoint
-    textAnalyticsKey: textAnalyticsKey
+    names: names
   }
 }
+
+// var textAnalyticsEndpoint = 'https://${cognitiveServicesAccountName}.cognitiveservices.azure.com/'
