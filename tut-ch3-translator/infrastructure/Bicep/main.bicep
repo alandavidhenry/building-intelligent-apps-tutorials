@@ -7,27 +7,35 @@ targetScope = 'subscription'
 param parameterFile string = 'parameters.bicep'
 
 // Reference parameters
+@description('Project name used for resource naming')
 param projectName string
+
+@description('Prefix for storage account name')
 param storageAccountPrefix string
+
+@description('Azure region for resource deployment')
 param location string
+
+@description('Tags to be applied to all resources')
 param tags object
 
 // Create unique suffix
-param deploymentId string = utcNow()
-var uniqueSuffix = uniqueString(subscription().id, deploymentId)
+var uniqueSuffix = uniqueString(subscription().id, deployment().name)
 
 // Name resources
-var resourceGroupName = 'rg-${projectName}'
-var translatorName = 'trsl-${projectName}-${uniqueSuffix}'
-var logAnalyticsName ='log-${projectName}-${uniqueSuffix}'
-var appInsightsName = 'appi-${projectName}-${uniqueSuffix}'
-var storageAccountName = '${storageAccountPrefix}st${uniqueSuffix}'
-var appServicePlanName = 'asp-${projectName}-${uniqueSuffix}'
-var functionAppName = 'func-${projectName}-${uniqueSuffix}'
+var names = {
+  resourceGroup: 'rg-${projectName}'
+  translator: 'trsl-${projectName}-${uniqueSuffix}'
+  logAnalytics: 'log-${projectName}-${uniqueSuffix}'
+  appInsights: 'appi-${projectName}-${uniqueSuffix}'
+  storageAccount: 'st${storageAccountPrefix}${uniqueSuffix}'
+  appServicePlan: 'asp-${projectName}-${uniqueSuffix}'
+  functionApp: 'func-${projectName}-${uniqueSuffix}'
+}
 
 // Create resource group
 resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
-  name: resourceGroupName
+  name: names.resourceGroup
   location: location
   tags: tags
 }
@@ -39,11 +47,6 @@ module resources 'resources.bicep' = {
   params: {
     location: location
     tags: tags
-    translatorName: translatorName
-    logAnalyticsName: logAnalyticsName
-    appInsightsName: appInsightsName
-    storageAccountName: storageAccountName
-    appServicePlanName: appServicePlanName
-    functionAppName: functionAppName
+    names: names
   }
 }

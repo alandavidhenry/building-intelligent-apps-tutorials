@@ -1,58 +1,51 @@
-// Reference parameters
 param location string
 param tags object
-param translatorName string
-param logAnalyticsName string
-param appInsightsName string
-param storageAccountName string
-param appServicePlanName string
-param functionAppName string
+param names object
 
 module translator 'modules/translator.bicep' = {
   name: 'translatorDeployment'
   params: {
-    translatorName: translatorName
+    name: names.translator
     location: location
     tags: tags
   }
 }
 
-module appInsights 'modules/appInsights.bicep' = {
-  name: 'appInsightsDeployment'
+module monitoring 'modules/monitoring.bicep' = {
+  name: 'monitoringDeployment'
   params: {
-    logAnalyticsName: logAnalyticsName
-    appInsightsName: appInsightsName
+    names: {
+      logAnalytics: names.logAnalytics
+      appInsights: names.appInsights
+    }
     location: location
     tags: tags
   }
 }
 
-module storageAccount 'modules/storageAccount.bicep' = {
-  name: 'storageAccountDeployment'
+module storage 'modules/storage.bicep' = {
+  name: 'storageDeployment'
   params: {
-    storageAccountName: storageAccountName
+    name: names.storageAccount
     location: location
     tags: tags
   }
 }
 
-module appServicePlan 'modules/appServicePlan.bicep' = {
-  name: 'appServicePlanDeployment'
+module functionInfra 'modules/function-infrastructure.bicep' = {
+  name: 'functionInfraDeployment'
   params: {
-    appServicePlanName: appServicePlanName
+    names: {
+      appServicePlan: names.appServicePlan
+      functionApp: names.functionApp
+    }
     location: location
     tags: tags
+    storageAccountName: storage.outputs.name
+    appInsightsConnectionString: monitoring.outputs.appInsightsConnectionString
+    translatorName: translator.outputs.name
   }
-}
-
-module functionApp 'modules/functionApp.bicep' = {
-  name: 'functionAppDeployment'
-  params: {
-    functionAppName: functionAppName
-    location: location
-    tags: tags
-    appServicePlanId: appServicePlan.outputs.id
-    storageAccountName: storageAccount.outputs.name
-    appInsightsConnectionString: appInsights.outputs.connectionString
-  }
+  dependsOn: [
+    translator
+  ]
 }

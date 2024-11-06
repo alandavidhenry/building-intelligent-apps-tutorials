@@ -1,26 +1,19 @@
-param translatorName string
+param name string
 param location string
 param tags object
 
 resource translator 'Microsoft.CognitiveServices/accounts@2024-06-01-preview' = {
-  name: translatorName
+  name: name
   location: location
   tags: tags
   sku: {
     name: 'F0'
   }
   kind: 'TextTranslation'
-  identity: {
-    type: 'None'
-  }
   properties: {
-    customSubDomainName: translatorName
-    networkAcls: {
-      defaultAction: 'Allow'
-      virtualNetworkRules: []
-      ipRules: []
-    }
+    customSubDomainName: name
     publicNetworkAccess: 'Enabled'
   }
 }
 
+output name string = translator.name
